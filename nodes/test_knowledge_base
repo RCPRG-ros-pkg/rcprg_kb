@@ -1,31 +1,38 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import rospy
+import rclpy
 import os
 import tiago_kb.embedded_image as ei
 import tiago_kb.places_xml as px
+from rclpy.node import Node
 
-def main():
-    # Output path for tests
-    output_path = '/tmp/tiago_kb'
-    try:
-        os.mkdir(output_path)
-    except Exception as e:
-        print e
+class KnowledgeBaseNode(Node):
+    def __init__(self):
+        super().__init__('knowledge_base')
+        self.declare_parameter('places_xml', 'default_value')
 
-    rospy.init_node('knowledge_base')
-    rospy.sleep(0.5)
+        # Output path for tests
+        output_path = '/tmp/tiago_kb'
+        try:
+            os.makedirs(output_path, exist_ok=True)
+        except Exception as e:
+            self.get_logger().info(f'Error creating output directory: {e}')
 
-    places_xml = rospy.get_param('~places_xml')
+        places_xml = self.get_parameter('places_xml').get_parameter_value().string_value
 
-    ei.test_EmbeddedImage(output_path)
-    px.test_PlacesXML(output_path, places_xml)
+        ei.test_EmbeddedImage(output_path)
+        px.test_PlacesXML(output_path, places_xml)
 
-    # Read database with places
-    #print 'Parsing file "' + places_xml + '"'
-    #places = px.PlacesXml(places_xml)
-    #places = PlacesXmlParser(places_xml).getKB()
+        # Read database with places
+        #self.get_logger().info(f'Parsing file "{places_xml}"')
+        #places = px.PlacesXml(places_xml)
+        #places = PlacesXmlParser(places_xml).getKB()
 
+def main(args=None):
+    rclpy.init(args=args)
+    knowledge_base_node = KnowledgeBaseNode()
+    rclpy.spin(knowledge_base_node)
+    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
