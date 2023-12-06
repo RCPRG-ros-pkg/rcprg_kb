@@ -505,13 +505,14 @@ def test_PlacesXML(output_path, places_xml_filename):
         cv2.imwrite(output_path + '/' + mc_name + '_map5.png', i_add5.getImage())
 
     test_places = [
-        ('korytarz', (2.9, 2.3)),
-        ('przesmyk', (3.65, 6.5)),
-        ('kuchnia', (2.9, -0.6)),
-        ('salon', (0.0, 0.0)),
-        ('pokoj', (3.0, 5.0)),
-        ('warsztat', (2.0, 8.5)),
-        ]
+        ('corridor', (2.9, 2.3)),
+        ('isthmus', (3.65, 6.5)),
+        ('kitchen', (2.9, -0.6)),
+        ('living room', (0.0, 0.0)),
+        ('room', (3.0, 5.0)),
+        ('workshop', (2.0, 8.5)),
+    ]
+
 
     '''
     tf = places.getMapsTransform('sim', 'real')
